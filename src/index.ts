@@ -8,6 +8,7 @@ function parseArgs() {
   const args = process.argv.slice(2);
   let command = 'setup';
   let source: string | undefined;
+  let tag: string | undefined;
   let pluginName = 'matt';
   let output: string | undefined;
   let isGlobal = true;
@@ -18,6 +19,8 @@ function parseArgs() {
       command = arg;
     } else if (arg === '--source' && i + 1 < args.length) {
       source = args[++i];
+    } else if ((arg === '--tag' || arg === '--version') && i + 1 < args.length) {
+      tag = args[++i];
     } else if (arg === '--name' && i + 1 < args.length) {
       pluginName = args[++i];
     } else if (arg === '--output' && i + 1 < args.length) {
@@ -33,11 +36,11 @@ function parseArgs() {
     output = path.join(process.cwd(), 'dist', pluginName);
   }
 
-  return { command, source, pluginName, output, isGlobal };
+  return { command, source, tag, pluginName, output, isGlobal };
 }
 
 function main() {
-  const { command, source, pluginName, output, isGlobal } = parseArgs();
+  const { command, source, tag, pluginName, output, isGlobal } = parseArgs();
 
   console.log(`=== Matt Pocock Skills AGY Converter ===`);
   console.log(`Plugin Name: ${pluginName}`);
@@ -51,7 +54,7 @@ function main() {
     return;
   }
 
-  const repoPath = prepareRepository({ source });
+  const repoPath = prepareRepository({ source, tag });
 
   const isSetup = command === 'setup' || command === 'bootstrap';
 

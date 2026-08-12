@@ -2,8 +2,12 @@
 
 This project converts Matt Pocock's Claude Code skills repository ([github.com/mattpocock/skills](https://github.com/mattpocock/skills)) into an Antigravity (`agy`) plugin.
 
+## Versioning Policy
+By default, the converter uses the **latest published release tag** (e.g. `v1.2.3`) from the source repository rather than building from `master`.
+Specific versions or branches can be checked out using `--tag <version_or_branch>` (e.g. `--tag master` or `--tag v1.2.0`).
+
 ## Project Structure
-- `src/repo.ts`: Clones/updates source skills repository.
+- `src/repo.ts`: Clones/updates source skills repository and checks out latest tag (or `--tag` override).
 - `src/converter.ts`: Converts Claude skills into flattened AGY plugin format and cleans frontmatter (`disable-model-invocation`).
 - `src/installer.ts`: Deploys plugin to AGY customization directory (`~/.gemini/config/plugins/matt`) and re-indexes registry.
 - `src/verifier.ts`: Verifies plugin installation with `agy --print "/matt:ask-matt"`.
@@ -13,7 +17,7 @@ This project converts Matt Pocock's Claude Code skills repository ([github.com/m
 ## Development & Verification Conventions
 1. **Tooling**: Built with Node.js + TypeScript using `mise` for environment management.
 2. **Commands**:
-   - `mise run setup`: Runs complete compound setup sequence (build, clone/pull, convert, install, and verify).
+   - `mise run setup`: Runs complete compound setup sequence (build, clone/pull, convert latest tag, install, and verify).
    - `mise run build`: Compiles TypeScript.
    - `mise run convert`: Converts skills into `./dist/matt`.
    - `mise run install`: Installs plugin globally into `~/.gemini/config/plugins/matt`.

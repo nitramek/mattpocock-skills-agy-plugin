@@ -2,6 +2,9 @@
 
 CLI tool and `mise` workflow to convert Matt Pocock's skills repository ([github.com/mattpocock/skills](https://github.com/mattpocock/skills)) into an Antigravity (`agy`) plugin.
 
+## Versioning Policy
+By default, the converter builds from the **latest published release version tag** (e.g. `v1.2.3`), rather than unreleased `master`.
+
 ## Usage
 
 ### Setup Pipeline (0-to-installed)
@@ -14,7 +17,7 @@ npm run setup
 
 This single command:
 1. Compiles the TypeScript codebase (`npm run build`).
-2. Clones or pulls the latest `mattpocock/skills` repository into `.cache/`.
+2. Fetches tags from `mattpocock/skills` and checks out the **latest published release tag** (e.g. `v1.2.3`).
 3. Converts and flattens all 35 skills into `./dist/matt`.
 4. Installs the plugin globally into `~/.gemini/config/plugins/matt` and refreshes AGY's plugin registry.
 5. Verifies the installation with `agy --print "/matt:ask-matt"`.
@@ -28,6 +31,7 @@ mise run verify     # Verify installation via agy --print "/matt:ask-matt"
 ```
 
 ### CLI Arguments
+- `--tag <version_or_ref>` / `--version <version_or_ref>`: Override target git tag or branch (e.g. `--tag v1.2.0` or `--tag master`).
 - `--source <path_or_url>`: Custom local directory or Git repository URL.
 - `--name <plugin_name>`: Override plugin name (default: `matt`).
 - `--output <dir>`: Custom output directory for converted plugin.

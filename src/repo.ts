@@ -7,6 +7,7 @@ const CACHE_DIR_NAME = '.cache/mattpocock-skills';
 
 export interface RepoOptions {
   source?: string;
+  tag?: string;
   cwd?: string;
 }
 
@@ -25,21 +26,44 @@ export function prepareRepository(options: RepoOptions = {}): string {
   const repoUrl = (source && source.startsWith('http')) ? source : DEFAULT_REPO_URL;
   const cachePath = path.join(baseDir, CACHE_DIR_NAME);
 
-  if (fs.existsSync(cachePath)) {
-    console.log(`[repo] Updating cached repository at ${cachePath}...`);
-    try {
-      execSync('git pull --rebase', { cwd: cachePath, stdio: 'inherit' });
-    } catch (err) {
-      console.warn(`[repo] Warning: git pull failed in ${cachePath}, using existing cached copy.`);
-    }
-  } else {
+  if (!fs.existsSync(cachePath)) {
     console.log(`[repo] Cloning repository ${repoUrl} to ${cachePath}...`);
     fs.mkdirSync(path.dirname(cachePath), { recursive: true });
     execSync(`git clone ${repoUrl} "${cachePath}"`, { stdio: 'inherit' });
+  } else {
+    console.log(`[repo] Fetching latest refs and tags for ${cachePath}...`);
+    try {
+      execSync('git fetch --all --tags', { cwd: cachePath, stdio: 'ignore' });
+    } catch (err) {
+      console.warn(`[repo] Warning: git fetch failed in ${cachePath}, using local git cache.`);
+    }
+  }
+
+  // Checkout target version (tag or ref)
+  const targetTag = options.tag || getLatestVersionTag(cachePath);
+  
+  if (targetTag) {
+    console.log(`[repo] Checking out version target: "${targetTag}"...`);
+    try {
+      execSync(`git checkout "${targetTag}"`, { cwd: cachePath, stdio: 'ignore' });
+    } catch (err) {
+      console.warn(`[repo] Failed to checkout "${targetTag}", remaining on current HEAD.`);
+    }
   }
 
   validateRepo(cachePath);
   return cachePath;
+}
+
+export function getLatestVersionTag(repoPath: string): string | undefined {
+  try {
+    const raw = execSync('git tag -l --sort=-v:refname', { cwd: repoPath, encoding: 'utf-8' });
+    const tags = raw.split('\n').map(t => t.trim()).filter(Boolean);
+    const versionTags = tags.filter(t => /^v?\d+\.\d+\.\d+/.test(t));
+    return versionTags[0];
+  } catch (_) {
+    return undefined;
+  }
 }
 
 function validateRepo(repoPath: string): void {
