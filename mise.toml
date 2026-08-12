@@ -1,0 +1,15 @@
+[tasks.build]
+description = "Build TypeScript code"
+run = "npm run build"
+
+[tasks.convert]
+description = "Convert Matt Pocock skills to AGY plugin in dist/matt"
+run = "npx tsx src/index.ts convert"
+
+[tasks.install]
+description = "Convert and install plugin to ~/.gemini/config/plugins/matt"
+run = "npx tsx src/index.ts install"
+
+[tasks.verify]
+description = "Verify plugin installation with agy --print /matt:ask-matt"
+run = "npx tsx src/index.ts verify"

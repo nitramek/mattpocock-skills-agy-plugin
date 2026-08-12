@@ -1,0 +1,29 @@
+{
+  "name": "mattpocock-skills-agy-plugin",
+  "version": "1.0.0",
+  "description": "Converter for Matt Pocock skills (Claude plugin format) into Antigravity (AGY) plugin format",
+  "main": "dist/index.js",
+  "bin": {
+    "mattpocock-skills-agy-plugin": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "convert": "tsx src/index.ts convert",
+    "install-plugin": "tsx src/index.ts install",
+    "verify": "tsx src/index.ts verify"
+  },
+  "keywords": [
+    "antigravity",
+    "agy",
+    "claude-plugin",
+    "mattpocock",
+    "skills"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.1"
+  }
+}
