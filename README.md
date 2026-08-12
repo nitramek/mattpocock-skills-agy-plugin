@@ -4,13 +4,22 @@ CLI tool and `mise` workflow to convert Matt Pocock's skills repository ([github
 
 ## Usage
 
-### Quickstart
-Run the end-to-end pipeline (clones/pulls repo, converts skills, installs plugin, and verifies):
+### Setup Pipeline (0-to-installed)
+Run the full 0-to-installed setup pipeline using `mise` or `npm`:
 ```bash
-npx tsx src/index.ts all
+mise run setup
+# or
+npm run setup
 ```
 
-### Using `mise` Tasks
+This single command:
+1. Compiles the TypeScript codebase (`npm run build`).
+2. Clones or pulls the latest `mattpocock/skills` repository into `.cache/`.
+3. Converts and flattens all 35 skills into `./dist/matt`.
+4. Installs the plugin globally into `~/.gemini/config/plugins/matt` and refreshes AGY's plugin registry.
+5. Verifies the installation with `agy --print "/matt:ask-matt"`.
+
+### Individual `mise` Tasks
 ```bash
 mise run build      # Compile TypeScript to dist/
 mise run convert    # Convert skills into dist/matt

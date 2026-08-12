@@ -10,7 +10,8 @@
     "build": "tsc",
     "convert": "tsx src/index.ts convert",
     "install-plugin": "tsx src/index.ts install",
-    "verify": "tsx src/index.ts verify"
+    "verify": "tsx src/index.ts verify",
+    "setup": "npm run build && tsx src/index.ts setup"
   },
   "keywords": [
     "antigravity",

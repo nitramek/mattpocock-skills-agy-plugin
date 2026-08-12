@@ -1,3 +1,11 @@
+[tasks.setup]
+description = "Full end-to-end setup pipeline: build, clone/update skills repo, convert, install globally, and verify"
+run = "npm run setup"
+
+[tasks.all]
+description = "Alias for setup"
+run = "mise run setup"
+
 [tasks.build]
 description = "Build TypeScript code"
 run = "npm run build"

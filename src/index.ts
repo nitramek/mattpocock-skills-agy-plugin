@@ -6,7 +6,7 @@ import { verifyInstallation } from './verifier';
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  let command = 'all';
+  let command = 'setup';
   let source: string | undefined;
   let pluginName = 'matt';
   let output: string | undefined;
@@ -14,7 +14,7 @@ function parseArgs() {
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if (arg === 'convert' || arg === 'install' || arg === 'verify' || arg === 'all') {
+    if (arg === 'convert' || arg === 'install' || arg === 'verify' || arg === 'setup' || arg === 'bootstrap') {
       command = arg;
     } else if (arg === '--source' && i + 1 < args.length) {
       source = args[++i];
@@ -53,15 +53,17 @@ function main() {
 
   const repoPath = prepareRepository({ source });
 
-  if (command === 'convert' || command === 'all' || command === 'install') {
+  const isSetup = command === 'setup' || command === 'bootstrap';
+
+  if (command === 'convert' || command === 'install' || isSetup) {
     convertPlugin({ repoPath, outputDir: output, pluginName });
   }
 
-  if (command === 'install' || command === 'all') {
+  if (command === 'install' || isSetup) {
     installPlugin({ sourceDir: output, global: isGlobal });
   }
 
-  if (command === 'all') {
+  if (isSetup) {
     const success = verifyInstallation(pluginName, 'ask-matt');
     if (!success) {
       console.error('[cli] Verification failed.');
