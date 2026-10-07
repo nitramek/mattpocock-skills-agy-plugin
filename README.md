@@ -1,3 +1,7 @@
+# Motivation
+I wanted to use Matt Pocock skills in Antigravity CLI, and I didnt want to keep juggling with skills tooling I wanted to have it packaged in one plugin.
+I am not claiming this works the best, I am not claiming it even works correctly at all! I just know for me it works and if someone else want to use this they can.
+
 # Matt Pocock Skills AGY Plugin Converter
 
 CLI tool and `mise` workflow to convert Matt Pocock's skills repository ([github.com/mattpocock/skills](https://github.com/mattpocock/skills)) into an Antigravity (`agy`) plugin.
