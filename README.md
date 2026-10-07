@@ -43,3 +43,9 @@ Once installed, skills bundled in the `matt` plugin are invoked using the `<plug
 - `/matt:grill-with-docs`
 - `/matt:tdd`
 - `/matt:diagnosing-bugs`
+... etc
+
+## License
+
+[WTFPL](LICENSE) – Do What The Fuck You Want To Public License.
+
