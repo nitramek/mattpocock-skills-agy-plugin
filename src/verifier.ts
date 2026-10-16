@@ -1,8 +1,24 @@
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 import { execSync } from 'child_process';
 
-export function verifyInstallation(pluginName: string = 'mattpocock-skills', skillName: string = 'ask-matt'): boolean {
+export function verifyInstallation(pluginName: string = 'matt', skillName: string = 'ask-matt'): boolean {
   const namespacedSkill = `${pluginName}:${skillName}`;
   console.log(`[verifier] Verifying namespaced skill "/${namespacedSkill}" availability with agy...`);
+
+  // Verify metadata preservation on skills that require disable-model-invocation
+  const globalPluginDir = path.join(os.homedir(), '.gemini', 'config', 'plugins', pluginName);
+  const implementPath = path.join(globalPluginDir, 'skills', 'implement', 'SKILL.md');
+
+  if (fs.existsSync(implementPath)) {
+    const implementContent = fs.readFileSync(implementPath, 'utf-8');
+    if (!implementContent.includes('disable-model-invocation: true')) {
+      console.error(`[verifier] Verification FAILED: "implement" skill is missing "disable-model-invocation: true" metadata.`);
+      return false;
+    }
+    console.log(`[verifier] Verification SUCCESS: "implement" skill preserves "disable-model-invocation: true" metadata.`);
+  }
 
   try {
     const output = execSync(`agy --print "/${namespacedSkill}"`, {

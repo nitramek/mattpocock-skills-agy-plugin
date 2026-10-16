@@ -112,41 +112,27 @@ function scanSkillsDirectory(dir: string, results: string[]) {
 function cleanSkillFrontmatter(skillMdPath: string, skillName: string): void {
   const content = fs.readFileSync(skillMdPath, 'utf-8');
   
-  // Check if starts with YAML frontmatter
-  if (!content.startsWith('---')) {
+  // Match frontmatter between opening --- and closing ---
+  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+
+  if (!match) {
     const newContent = `---\nname: ${skillName}\n---\n\n` + content;
     fs.writeFileSync(skillMdPath, newContent, 'utf-8');
     return;
   }
 
-  const parts = content.split('---');
-  if (parts.length < 3) {
-    return;
-  }
+  const frontmatterContent = match[1];
+  const bodyContent = content.slice(match[0].length);
 
-  const frontmatterLines = parts[1].split('\n');
-  const cleanedLines: string[] = [];
-
-  let hasName = false;
-  for (const line of frontmatterLines) {
-    const trimmed = line.trim();
-    // Strip Claude-specific unsupported keys
-    if (trimmed.startsWith('disable-model-invocation:')) {
-      continue;
-    }
-    if (trimmed.startsWith('name:')) {
-      hasName = true;
-    }
-    cleanedLines.push(line);
-  }
+  // Ensure `name:` is present without stripping any metadata (such as disable-model-invocation)
+  const lines = frontmatterContent.split('\n');
+  const hasName = lines.some(line => line.trim().startsWith('name:'));
 
   if (!hasName) {
-    cleanedLines.unshift(`name: ${skillName}`);
+    const updatedFrontmatter = `name: ${skillName}\n` + frontmatterContent;
+    const newContent = `---\n${updatedFrontmatter}\n---\n` + bodyContent;
+    fs.writeFileSync(skillMdPath, newContent, 'utf-8');
   }
-
-  parts[1] = cleanedLines.join('\n');
-  const cleanedContent = parts.join('---');
-  fs.writeFileSync(skillMdPath, cleanedContent, 'utf-8');
 }
 
 function copyDirectorySync(src: string, dest: string) {

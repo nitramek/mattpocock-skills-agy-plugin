@@ -8,7 +8,7 @@ Specific versions or branches can be checked out using `--tag <version_or_branch
 
 ## Project Structure
 - `src/repo.ts`: Clones/updates source skills repository and checks out latest tag (or `--tag` override).
-- `src/converter.ts`: Converts Claude skills into flattened AGY plugin format and cleans frontmatter (`disable-model-invocation`).
+- `src/converter.ts`: Converts Claude skills into flattened AGY plugin format and preserves frontmatter metadata (including `disable-model-invocation`).
 - `src/installer.ts`: Deploys plugin to AGY customization directory (`~/.gemini/config/plugins/matt`) and re-indexes registry.
 - `src/verifier.ts`: Verifies plugin installation with `agy --print "/matt:ask-matt"`.
 - `src/index.ts`: Main CLI interface.
